@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physical AI Technology Stacks: 6 Application Architectures</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a1a;color:#e0e0e0;padding:12px;overflow-x:auto}
+h1{text-align:center;font-size:1.3rem;margin-bottom:2px;color:#fff}
+.sub{text-align:center;font-size:.78rem;color:#888;margin-bottom:10px}
+.legend{display:flex;justify-content:center;gap:14px;margin-bottom:10px;flex-wrap:wrap}
+.legend span{font-size:.7rem;color:#999;display:flex;align-items:center;gap:4px}
+.legend .sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.stacks-wrap{display:flex;gap:4px;min-width:1200px;padding-bottom:10px}
+.stack-col{flex:1;min-width:190px;display:flex;flex-direction:column;gap:3px}
+.stack-header{text-align:center;padding:8px 4px;border-radius:8px 8px 0 0;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;min-height:52px;display:flex;align-items:center;justify-content:center}
+.sh-1{background:#1e3a5f;color:#7ecbf5}
+.sh-2{background:#2a1e4a;color:#c49bff}
+.sh-3{background:#1e3a2a;color:#66d9a0}
+.sh-4{background:#3a2e1a;color:#f5c77e}
+.sh-5{background:#3a1a2a;color:#f57ec4}
+.sh-6{background:#1a2e3a;color:#7ef5e8}
+.layer{border-radius:6px;padding:6px;position:relative}
+.layer-title{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;opacity:.7}
+.l-app{background:#ffffff08;border:1px solid #ffffff15}
+.l-ai{background:#4361ee08;border:1px solid #4361ee25}
+.l-dc{background:#f59e0b08;border:1px solid #f59e0b25}
+.l-dc.minor{border-style:dashed;opacity:.6}
+.l-hw{background:#10b98108;border:1px solid #10b98125}
+.l-phys{background:#ec489908;border:1px solid #ec489925}
+.sublayer{margin-top:4px;padding:4px;border-radius:4px;background:#ffffff05;border:1px solid #ffffff10}
+.sublayer-title{font-size:.58rem;color:#888;margin-bottom:3px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:2px}
+.chip{font-size:.6rem;padding:2px 5px;border-radius:8px;cursor:pointer;white-space:nowrap;border:1px solid transparent;transition:all .15s}
+.chip:hover{transform:scale(1.08);z-index:10;border-color:#fff}
+.chip.dim{opacity:.12}
+.chip.glow{box-shadow:0 0 6px rgba(255,255,255,.4);border-color:#fff!important}
+/* overlap count colors */
+.ov-1{background:#2a2a3a;color:#aaa}
+.ov-2{background:#1a3a4a;color:#7ecbf5}
+.ov-3{background:#2a1a4a;color:#c49bff}
+.ov-4{background:#3a2a1a;color:#ffa726}
+.ov-5{background:#4a1a2a;color:#f57ec4}
+.ov-6{background:linear-gradient(135deg,#4361ee,#e040fb);color:#fff;font-weight:600}
+/* OEM vs Supplier distinction */
+.oem-label,.sup-label{font-size:.55rem;color:#666;text-transform:uppercase;letter-spacing:.3px;margin:3px 0 2px;font-weight:600}
+/* Detail panel */
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:999;display:none}
+.overlay.show{display:block}
+.detail{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1a1a2e;border:1px solid #333;border-radius:12px;padding:18px;max-width:440px;width:92%;z-index:1000;display:none;max-height:80vh;overflow-y:auto}
+.detail.show{display:block}
+.detail h2{font-size:1.1rem;margin-bottom:2px}
+.detail .tk{color:#888;font-size:.8rem;margin-bottom:8px}
+.detail .pres{font-size:.75rem;color:#bbb;margin-bottom:8px}
+.detail .pres span{display:inline-block;margin:2px;padding:2px 8px;border-radius:8px;font-size:.65rem}
+.detail .pres .p1{background:#1e3a5f;color:#7ecbf5}
+.detail .pres .p2{background:#2a1e4a;color:#c49bff}
+.detail .pres .p3{background:#1e3a2a;color:#66d9a0}
+.detail .pres .p4{background:#3a2e1a;color:#f5c77e}
+.detail .pres .p5{background:#3a1a2a;color:#f57ec4}
+.detail .pres .p6{background:#1a2e3a;color:#7ef5e8}
+.detail .role{font-size:.78rem;color:#ccc;line-height:1.5;margin-top:6px}
+.detail .close-btn{position:absolute;top:8px;right:12px;background:none;border:none;color:#888;font-size:1.2rem;cursor:pointer}
+.detail .close-btn:hover{color:#fff}
+/* Filter */
+.filters{display:flex;justify-content:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.fbtn{padding:4px 10px;border-radius:14px;border:1px solid #333;background:#1a1a2e;color:#999;cursor:pointer;font-size:.68rem;transition:all .15s}
+.fbtn:hover{border-color:#666;color:#fff}
+.fbtn.active{background:#4361ee;border-color:#4361ee;color:#fff}
+@media(max-width:900px){.stacks-wrap{min-width:auto;flex-direction:column}.stack-col{min-width:auto}}
+</style>
+</head>
+<body>
+<h1>Physical AI Technology Stacks: 6 Applications</h1>
+<p class="sub">Each column shows the full technology stack. Companies colored by cross-stack presence. Click any company for details.</p>
+
+<div class="filters" id="filters"></div>
+
+<div class="legend">
+  <span><i class="sw ov-1"></i>1 stack</span>
+  <span><i class="sw ov-2"></i>2 stacks</span>
+  <span><i class="sw ov-3"></i>3 stacks</span>
+  <span><i class="sw ov-4"></i>4 stacks</span>
+  <span><i class="sw ov-5"></i>5 stacks</span>
+  <span><i class="sw ov-6"></i>6 stacks</span>
+</div>
+
+<div class="stacks-wrap" id="stacks"></div>
+
+<div class="overlay" id="ov"></div>
+<div class="detail" id="det">
+  <button class="close-btn" id="xb">&times;</button>
+  <h2 id="dn"></h2>
+  <div class="tk" id="dtk"></div>
+  <div class="pres" id="dpr"></div>
+  <div class="role" id="drl"></div>
+</div>
+
+<script>
+// COMPANY DATABASE
+// Each company: {n:name, t:ticker, stacks:[1-6], layer:app|ai|dc|dc-power|dc-cpo|hw|phys-oem|phys-sup, role:description}
+// stacks: 1=Defense Terrestrial/Aerial, 2=Defense Orbital, 3=Self-Driving, 4=Industrial AMR, 5=Consumer Robotics, 6=Space Datacenters
+
+const companies = [
+  // APPLICATION LAYER
+  {n:"Palantir",t:"PLTR",stacks:[1,2],layer:"app",role:"AIP/Gotham for targeting, Maven Smart System. TITAN contract ~$480M. Multi-domain sensor fusion for autonomous warfare and orbital ISR."},
+  {n:"Anduril",t:"Private",stacks:[1,2],layer:"app",role:"Lattice OS: real-time AI C2 fusing thousands of sensors across air/land/sea/space. Ghost X drones, Roadrunner interceptor. Arsenal factory in Ohio."},
+  {n:"Shield AI",t:"Private",stacks:[1],layer:"app",role:"Hivemind autonomy stack: AI pilot for F-16 CCA and V-BAT drones. GPS-denied autonomous flight. 130+ combat sorties in Ukraine."},
+  {n:"Waymo",t:"GOOGL",stacks:[3],layer:"app",role:"L4 autonomous driving stack. 150K+ paid rides/week. Driver software + sensor suite integration. Expanding to 7+ cities."},
+  {n:"Tesla FSD",t:"TSLA",stacks:[3],layer:"app",role:"Full Self-Driving on Hardware 4.0. Vision-only neural nets. Austin robotaxi launched June 2025. Progressed to unsupervised Dec 2025."},
+  {n:"Mobileye",t:"MBLY",stacks:[3],layer:"app",role:"EyeQ6 ADAS platform. SuperVision L2+ hands-free. Scalable from L2 to L4. Launched with Zeekr."},
+  {n:"BYD God's Eye",t:"BYDDY",stacks:[3],layer:"app",role:"God's Eye intelligent driving standard across full lineup from ~$8.3K vehicles. ADAS democratization at scale."},
+  {n:"Xpeng XNGP",t:"XPEV",stacks:[3],layer:"app",role:"XNGP autonomous driving launched nationwide China. Lidar + vision fusion. Flying car expansion."},
+  {n:"Amazon Robotics",t:"AMZN",stacks:[4],layer:"app",role:"World's largest AMR fleet: 1M+ robots deployed across fulfillment centers. Proteus autonomous mobile robot."},
+  {n:"Geek+",t:"Private",stacks:[4],layer:"app",role:"48.5% share in goods-to-person AMR solutions. 7 consecutive years #1 global AMR market share."},
+  {n:"Locus Robotics",t:"Private",stacks:[4],layer:"app",role:"Warehouse AMR fleet orchestration. LocusONE platform for multi-bot coordination. 1B+ units picked."},
+  {n:"MiR",t:"TER sub",stacks:[4],layer:"app",role:"Industrial-grade AMRs for manufacturing. Part of Teradyne. MiR1200 Pallet Jack for heavy logistics."},
+  {n:"OTTO Motors",t:"RR",stacks:[4],layer:"app",role:"Heavy-duty industrial AMR. 10M+ production hours accumulated. Rockwell Automation subsidiary."},
+  {n:"iRobot",t:"IRBT",stacks:[5],layer:"app",role:"Roomba robotic vacuum market leader. Home intelligence OS. Navigational AI for consumer environments."},
+  {n:"Skild AI",t:"Private",stacks:[4,5],layer:"app",role:"$1.4B Series C at $15B. Universal 'Skild Brain' foundation model: omni-bodied AI for any physical machine."},
+  {n:"Boston Dynamics",t:"Hyundai",stacks:[4,5],layer:"app",role:"Electric Atlas for commercial deployment. Spot for industrial inspection. Stretch for warehouse logistics."},
+  {n:"Unitree",t:"Private",stacks:[5],layer:"app",role:"G1 humanoid ~$16K, R1 at $5.9K. 5,500+ units shipped 2025. Targeting 10-20K in 2026. China market leader."},
+  {n:"Figure AI",t:"Private",stacks:[4,5],layer:"app",role:"$675M at $2.6B. Humanoid with OpenAI integration. BMW factory deployment. Warehouse + consumer dual path."},
+  {n:"1X Technologies",t:"Private",stacks:[5],layer:"app",role:"NEO Beta humanoid for home use. OpenAI-backed. Consumer deployment target."},
+  {n:"Physical Intelligence",t:"Private",stacks:[4,5],layer:"app",role:"$400M at $2.4B. Robot foundation models for general-purpose manipulation across industrial + consumer."},
+  {n:"Starcloud",t:"Private",stacks:[6],layer:"app",role:"First entity to train LLM in space. Launched Starcloud-1 with Nvidia H100 (100x most powerful space GPU). Nov 2025."},
+  {n:"Axiom Space",t:"Private",stacks:[6],layer:"app",role:"AxDCU-1 deployed on ISS fall 2025. Two orbital datacenter nodes launched Jan 2026. Red Hat Device Edge powered."},
+  {n:"Aetherflux",t:"Private",stacks:[6],layer:"app",role:"Space-based power beaming + edge compute for orbital infrastructure. Nvidia platform partner."},
+  
+  // AI/ML PLATFORM LAYER
+  {n:"NVIDIA",t:"NVDA",stacks:[1,2,3,4,5,6],layer:"ai",role:"DRIVE for auto, Isaac for robotics, Jetson for defense/edge, Omniverse for simulation, Dynamo for inference. Full-stack AI across all 6 applications."},
+  {n:"Anthropic",t:"Private",stacks:[1,3,4],layer:"ai",role:"Claude models deployed in Maven targeting (Palantir+GovCloud). Commercial AI for autonomous systems reasoning."},
+  {n:"OpenAI",t:"Private",stacks:[1,3,4,5],layer:"ai",role:"GPT models integrated into Anduril defense, Figure AI humanoids, commercial autonomy. Removed military ban Jan 2025."},
+  {n:"Meta/Llama",t:"META",stacks:[1,2,3,4,5,6],layer:"ai",role:"Llama open-weight models + PyTorch framework. De facto ML standard used across all physical AI applications."},
+  {n:"Google DeepMind",t:"GOOGL",stacks:[3,4,5],layer:"ai",role:"Vision-Language-Action (VLA) models for robotics. Gemini for autonomous reasoning. RT-2 robot foundation model."},
+  {n:"DeepSeek",t:"Private",stacks:[3,4],layer:"ai",role:"V3 MoE (671B/37B active). Open-source frontier model for training autonomous systems at fraction of cost."},
+  {n:"Mistral AI",t:"Private",stacks:[3,4],layer:"ai",role:"Mixtral MoE for edge inference. European open-source models for automotive and industrial deployment."},
+  {n:"Red Hat/IBM",t:"IBM",stacks:[1,4,6],layer:"ai",role:"llm-d K8s-native disaggregated serving. Red Hat Device Edge for Axiom Space orbital compute. OpenShift for classified."},
+  {n:"Horizon Robotics",t:"9660.HK",stacks:[3,4],layer:"ai",role:"Journey 6P at 560 TOPS. Chinese ADAS + robotics AI chip with integrated software stack."},
+  {n:"vLLM/Dynamo",t:"OSS",stacks:[1,2,3,4,6],layer:"ai",role:"Open-source inference serving (PagedAttention, disaggregated prefill-decode). Backbone for edge and cloud AI deployment."},
+  
+  // AI DATACENTER LAYER (Cloud/Training Infrastructure)
+  {n:"AWS",t:"AMZN",stacks:[1,2,3,4,5,6],layer:"dc",role:"GovCloud (classified defense), commercial AI training, Trainium/Inferentia chips. $5.5B Cipher lease. Powers all 6 stacks."},
+  {n:"Microsoft Azure",t:"MSFT",stacks:[1,2,3,4,5,6],layer:"dc",role:"Azure Gov + Space for defense. $9.7B Iren contract. Azure AI for autonomous training. FedRAMP High."},
+  {n:"Google Cloud",t:"GOOGL",stacks:[1,2,3,4,5,6],layer:"dc",role:"TPU pods for Waymo training. Defense analytics via Palantir. FluidStack TPU distribution."},
+  {n:"Oracle Cloud",t:"ORCL",stacks:[1,2,6],layer:"dc",role:"OCI Gov for sovereign defense workloads. Project Jupiter AI campus. 2.8 GW Bloom Energy deal."},
+  {n:"CoreWeave",t:"CRWV",stacks:[3,4,5],layer:"dc",role:"IPO ~$23B. Purpose-built GPU cloud for AI training. $10.2B Core Scientific contract for 590 MW."},
+  {n:"FluidStack",t:"Private",stacks:[3,4,5],layer:"dc",role:"$1B at $18B. Neocloud. $50B Anthropic datacenter deal. Google TPU distribution."},
+  {n:"Applied Digital",t:"APLD",stacks:[3,4],layer:"dc",role:"ChronoScale spinoff for GPU-as-a-service. Multi-GW hosting focused on AI training workloads."},
+  
+  // DC SUB-LAYER: POWER
+  {n:"Bloom Energy",t:"BE",stacks:[1,2,3,4,6],layer:"dc-power",role:"Solid oxide fuel cells. 2.8 GW Oracle deal. 100MW+ Equinix. Behind-the-meter for defense + commercial AI. $3.4-3.8B FY2026."},
+  {n:"Core Scientific",t:"CORZ",stacks:[3,4],layer:"dc-power",role:"$10.2B CoreWeave contract, 590 MW. Crypto-to-HPC. Powers autonomous vehicle + AMR training."},
+  {n:"Iren",t:"IREN",stacks:[3,4],layer:"dc-power",role:"$9.7B Microsoft AI cloud contract. 750 MW Texas campus. Powers commercial AI training."},
+  {n:"Cipher Mining",t:"CIFR",stacks:[3,4],layer:"dc-power",role:"$5.5B AWS lease. 300 MW. Powers cloud AI training for autonomous systems."},
+  {n:"Riot Platforms",t:"RIOT",stacks:[3,4],layer:"dc-power",role:"600 MW AI/HPC capacity Corsicana TX. AMD lease. Crypto-to-HPC conversion."},
+  {n:"Equinix",t:"EQIX",stacks:[1,2,3,4,6],layer:"dc-power",role:"Global colo leader. Bloom Energy 100MW+. Nuclear partnerships (Oklo, Radiant). Powers defense + commercial AI."},
+  {n:"Overview Energy",t:"Private",stacks:[6],layer:"dc-power",role:"Space-based solar power beaming. 1 GW Meta deal. GEO satellites beam near-IR to ground solar. Demo 2028, commercial 2030."},
+  {n:"Oklo",t:"OKLO",stacks:[1,3,4,6],layer:"dc-power",role:"Advanced fission microreactors for data centers. Equinix partnership. DoD interest for forward-deployed power."},
+  {n:"Solaris Energy",t:"Private",stacks:[2,6],layer:"dc-power",role:"Space-based solar arrays for orbital infrastructure and ground stations. Defense + commercial dual-use."},
+  
+  // DC SUB-LAYER: CO-PACKAGED OPTICS
+  {n:"Broadcom",t:"AVGO",stacks:[1,2,3,4,6],layer:"dc-cpo",role:"Tomahawk 5-Bailly CPO (50K+ shipped). Jericho3-AI. Backbone switching for all AI training clusters. $970M DoD VMware."},
+  {n:"Lumentum",t:"LITE",stacks:[1,2,3,4,6],layer:"dc-cpo",role:"Half of EML laser duopoly. 12x capacity expansion. $2B Nvidia investment. InP lasers allocated 32 months out. Critical bottleneck."},
+  {n:"Coherent",t:"COHR",stacks:[1,2,3,4,6],layer:"dc-cpo",role:"Other half EML duopoly. $2B Nvidia investment. Doubling InP capacity CY2026. 6-inch wafer lines (4x yield). $30M Navy SONGBOW laser."},
+  {n:"Marvell",t:"MRVL",stacks:[1,3,4,6],layer:"dc-cpo",role:"$3.25B Celestial AI acquisition. Photonic Fabric 2x power efficiency. Custom ASIC + CPO integration."},
+  {n:"Tower Semiconductor",t:"TSEM",stacks:[1,2,3,4,6],layer:"dc-cpo",role:"~85% SiPho foundry market. $920M capacity expansion. 70%+ reserved through 2028. Critical photonics fab."},
+  {n:"Credo Semi",t:"CRDO",stacks:[3,4,6],layer:"dc-cpo",role:"$750M DustPhotonics acquisition. DSP + SiPho vertically integrated. $500M+ optical revenue FY2027."},
+  {n:"GlobalFoundries",t:"GFS",stacks:[1,2,3,4,6],layer:"dc-cpo",role:"DMEA Cat 1A Trusted Supplier. $3.1B DoD contract. AMF acquisition for SiPho. Defense + commercial foundry."},
+  {n:"Cisco",t:"CSCO",stacks:[1,3,4,6],layer:"dc-cpo",role:"Silicon One G300 102.4 Tbps switching. Intelligent Collective Networking. Competes with Broadcom Tomahawk 6."},
+  {n:"TE Connectivity",t:"TEL",stacks:[3,4,6],layer:"dc-cpo",role:"224 Gbps copper for 400G AI channels. CPO-to-optical backplane with liquid cooling. OFC 2026 demos."},
+  {n:"Ayar Labs",t:"Private",stacks:[3,4,6],layer:"dc-cpo",role:"Optical I/O with TeraPHY chiplets. In-package photonics eliminating electrical bottlenecks. Intel partnership."},
+  {n:"Lightwave Logic",t:"LWLG",stacks:[3,4,6],layer:"dc-cpo",role:"Perkinamine electro-optic polymers on standard silicon. InP alternative. 2 Fortune 500 at Stage 3 design-win."},
+  
+  // COMPUTE HARDWARE LAYER
+  {n:"NVIDIA (HW)",t:"NVDA",stacks:[1,2,3,4,5,6],layer:"hw",role:"H100/B200/Rubin GPUs. Jetson Orin for edge. DRIVE Orin-X/Thor for auto. Isaac for robots. Custom defense accelerators."},
+  {n:"AMD",t:"AMD",stacks:[1,3,4,5],layer:"hw",role:"MI300X/MI350 accelerators. Xilinx FPGA for edge + defense. ROCm stack. Riot Platforms lease for AI/HPC."},
+  {n:"Intel",t:"INTC",stacks:[1,2,3,4,5],layer:"hw",role:"IFS foundry. Gaudi accelerators. Mobileye EyeQ6. Agilex FPGA for defense. CHIPS Act fab investments."},
+  {n:"Qualcomm",t:"QCOM",stacks:[3,4,5],layer:"hw",role:"Snapdragon Ride for automotive. Cloud AI 100 for edge inference. Robotics RB series for AMR/consumer."},
+  {n:"STMicroelectronics",t:"STM",stacks:[1,2,3,4,5],layer:"hw",role:"5B+ RF chips for Starlink. ESA/QML-V rad-hard (50 krad TID). 4th-gen SiC for EV. ADAS processors. Broad dual-use."},
+  {n:"Texas Instruments",t:"TXN",stacks:[1,2,3,4,5],layer:"hw",role:"60 yrs space. QML V/Y/P products. Dominant automotive analog. Radar/lidar signal chains. Defense + commercial."},
+  {n:"NXP",t:"NXPI",stacks:[1,2,3,4],layer:"hw",role:"RF A&D division. PowerPC mil processors. SAF85xx auto radar. i.MX for industrial AMR. S32 for autonomous vehicles."},
+  {n:"Arm",t:"ARM",stacks:[1,2,3,4,5,6],layer:"hw",role:"ISA in Tesla Optimus, Jetson, defense embedded, all edge AI. Best perf-per-watt. Foundation for battery/thermal constrained AI."},
+  {n:"TSMC",t:"TSM",stacks:[1,2,3,4,5,6],layer:"hw",role:"World's leading foundry. N3/N2 process. Fabricates Nvidia, Apple, AMD, Qualcomm. All physical AI chips flow through TSMC."},
+  {n:"SK Hynix",t:"000660.KS",stacks:[1,2,3,4,6],layer:"hw",role:"HBM market leader for Nvidia. Critical memory for AI accelerator stacks powering training of all autonomous systems."},
+  {n:"Samsung",t:"005930.KS",stacks:[1,2,3,4,5,6],layer:"hw",role:"HBM3E + GAA 3nm foundry. Memory + logic. Supplies defense + commercial. Exynos for auto."},
+  {n:"Micron",t:"MU",stacks:[1,3,4,6],layer:"hw",role:"HBM3E for accelerators. NAND/DRAM for datacenter. Automotive-grade memory for L4 systems."},
+  {n:"Teledyne FLIR",t:"TDY",stacks:[1,2],layer:"hw",role:"Boson+ thermal sensor: standard EO/IR on Switchblade, Skydio X10D. Defense ISR sensing backbone."},
+  {n:"Ouster",t:"OUST",stacks:[1,3,4],layer:"hw",role:"OS1 digital lidar Pentagon Blue UAS-approved. Serves defense drones + commercial robotics + autonomous vehicles."},
+  {n:"LightPath Tech",t:"LPTH",stacks:[1,2],layer:"hw",role:"$30M+ defense IR camera orders. NDAA-compliant optics. BlackDiamond chalcogenide glass (NRL license). $103M backlog."},
+  {n:"Ambarella",t:"AMBA",stacks:[1,3,4],layer:"hw",role:"CV-series edge AI SoCs. Defense ISR + commercial ADAS + AMR vision processing. Low-power AI inference at edge."},
+  {n:"SiFive",t:"Private",stacks:[3,4,5,6],layer:"hw",role:"$400M Series G at $3.65B. RISC-V data center CPUs. NVLink Fusion integration. 10B+ cores shipped."},
+  {n:"Positron AI",t:"Private",stacks:[3,4],layer:"hw",role:"$230M at >$1B. FPGA inference (Agilex-7M). Asimov ASIC taping out 2026. 2TB memory/accelerator. SLM optimized."},
+  {n:"MatX",t:"Private",stacks:[3,4],layer:"hw",role:"$500M Series B. Custom systolic array for 10x LLM training. TSMC fab. 2027 ship date."},
+  
+  // PHYSICAL PLATFORM - OEMs
+  {n:"Anduril (OEM)",t:"Private",stacks:[1],layer:"phys-oem",role:"Ghost X, Roadrunner-M interceptor, Barracuda USV, Anvil counter-drone. Vertically integrated from software to hardware."},
+  {n:"AeroVironment",t:"AVAV",stacks:[1],layer:"phys-oem",role:"Switchblade 600 loitering munitions. JUMP 20 VTOL. Freedom Eagle missile. $95.9M counter-UAS contract."},
+  {n:"Kratos Defense",t:"KTOS",stacks:[1],layer:"phys-oem",role:"XQ-58A Valkyrie jet drone. Affordable attritable autonomous aircraft. $446.8M Space Force contract."},
+  {n:"Red Cat Holdings",t:"RCAT",stacks:[1],layer:"phys-oem",role:"Black Widow SRR drone (Army Program of Record). Palantir autonomous nav. GPS-denied ISR."},
+  {n:"Skydio",t:"Private",stacks:[1],layer:"phys-oem",role:"X10D autonomous ISR drone. AI-powered navigation. US-manufactured. DoD Blue UAS approved."},
+  {n:"Rocket Lab",t:"RKLB",stacks:[2,6],layer:"phys-oem",role:"Electron/Neutron launch vehicles. $1.3B+ SDA spacecraft. $160M Mynaric acquisition for laser comms."},
+  {n:"SpaceX",t:"Private",stacks:[2,6],layer:"phys-oem",role:"Starlink 6K+ sats. Starship. Falcon 9 DoD workhorse. Satellite bus manufacturing. Dominant launch provider."},
+  {n:"L3Harris",t:"LHX",stacks:[2],layer:"phys-oem",role:"Space-based ISR/EW payloads. Golden Dome sensors. Satellite systems integration."},
+  {n:"Northrop Grumman",t:"NOC",stacks:[1,2],layer:"phys-oem",role:"B-21 Raider. Space interceptors. Missile defense satellites. Omniverse for cognitive spacecraft."},
+  {n:"Lockheed Martin",t:"LMT",stacks:[1,2],layer:"phys-oem",role:"F-35 (autonomy integration). Space-based interceptors. Hypersonics. Satellite systems."},
+  {n:"Boeing",t:"BA",stacks:[1,2],layer:"phys-oem",role:"MQ-25 autonomous tanker. SDA satellites (26 target 2026). Starliner. Space/air defense platforms."},
+  {n:"Redwire",t:"RDW",stacks:[2,6],layer:"phys-oem",role:"$925M Edge Autonomy. Space manufacturing. On-orbit infrastructure. Stalker drones."},
+  {n:"Waymo (OEM)",t:"GOOGL",stacks:[3],layer:"phys-oem",role:"Custom Jaguar I-PACE robotaxi (5th gen). Purpose-built sensor suite. Full-stack vehicle integration."},
+  {n:"Tesla (OEM)",t:"TSLA",stacks:[3,5],layer:"phys-oem",role:"Model Y robotaxi fleet. Cybercab. Optimus humanoid. Vertically integrated from chip to vehicle."},
+  {n:"Zoox",t:"AMZN",stacks:[3],layer:"phys-oem",role:"Purpose-built bidirectional robotaxi. No steering wheel. Amazon subsidiary. Las Vegas/Foster City testing."},
+  {n:"BYD (OEM)",t:"BYDDY",stacks:[3],layer:"phys-oem",role:"World's largest EV OEM. Vertical: batteries, chips, vehicles. God's Eye across full lineup."},
+  {n:"Unitree (OEM)",t:"Private",stacks:[5],layer:"phys-oem",role:"G1/H1/R1 humanoid manufacturing. Go2 quadruped. Integrated actuators + control. China's robot factory."},
+  {n:"Figure (OEM)",t:"Private",stacks:[4,5],layer:"phys-oem",role:"Figure 02 humanoid. BMW factory pilot. Dual industrial + consumer platform manufacturing."},
+  {n:"iRobot (OEM)",t:"IRBT",stacks:[5],layer:"phys-oem",role:"Roomba manufacturing. Consumer robot hardware + navigation systems. 40M+ robots sold."},
+  {n:"Starcloud (OEM)",t:"Private",stacks:[6],layer:"phys-oem",role:"Satellite datacenter bus with H100 integration. First orbital GPU compute platform launched Nov 2025."},
+  {n:"Axiom (OEM)",t:"Private",stacks:[6],layer:"phys-oem",role:"Orbital datacenter nodes. ISS-attached AxDCU-1. Purpose-built space compute hardware."},
+  
+  // PHYSICAL PLATFORM - SUPPLIERS
+  {n:"Magna",t:"MGA",stacks:[3],layer:"phys-sup",role:"Tier 1 auto supplier. NVIDIA DRIVE Hyperion ECUs. L2++ through L4 integration services. Supplies Tesla, BMW, GM."},
+  {n:"Continental",t:"CON.DE",stacks:[3,4],layer:"phys-sup",role:"Tier 1 automotive. Lidar, radar, cameras. AMR sensor packages. Brake/steering actuators for autonomous vehicles."},
+  {n:"ZF Friedrichshafen",t:"Private",stacks:[3],layer:"phys-sup",role:"ProAI supercomputer for L4. Autonomous shuttle platform. Chassis/driveline for self-driving vehicles."},
+  {n:"Bosch",t:"Private",stacks:[3,4],layer:"phys-sup",role:"World's largest Tier 1. Radar, ultrasonic, cameras for ADAS. AMR sensor suites. Complete driving automation stacks."},
+  {n:"Denso",t:"6902.T",stacks:[3],layer:"phys-sup",role:"Toyota affiliate. Global Vision Sensor. Thermal management. Semiconductor manufacturing for automotive AI."},
+  {n:"RTX (Raytheon)",t:"RTX",stacks:[1,2],layer:"phys-sup",role:"SM-3/SM-6 interceptor propulsion. Radar/sensor payloads. Space-based sensor packages. Kill vehicle components."},
+  {n:"General Atomics",t:"Private",stacks:[1,2],layer:"phys-sup",role:"MQ-9 Reaper propulsion + airframes. Electromagnetic launch systems. Nuclear propulsion for space."},
+  {n:"Impulse Space",t:"Private",stacks:[2,6],layer:"phys-sup",role:"Orbital transfer vehicles. Mira/Helios tugs for constellation servicing. Last-mile orbital logistics."},
+  {n:"Turion Space",t:"Private",stacks:[2,6],layer:"phys-sup",role:"Satellite servicing + debris removal. Orbital logistics for proliferated constellations."},
+  {n:"Mynaric",t:"RKLB sub",stacks:[2,6],layer:"phys-sup",role:"Laser communication terminals for satellite-to-satellite links. Acquired by Rocket Lab for $160M. Orbital mesh networking."},
+  {n:"Curtiss-Wright",t:"CW",stacks:[1,2],layer:"phys-sup",role:"Rugged defense electronics. Integrates Nvidia Jetson into military aerospace platforms. COTS for defense."},
+  {n:"Geek+ (Sup)",t:"Private",stacks:[4],layer:"phys-sup",role:"AMR chassis, drive units, lifting mechanisms. Goods-to-person hardware. Modular robot platforms."},
+  {n:"SICK AG",t:"SIK.DE",stacks:[4],layer:"phys-sup",role:"Industrial LiDAR + safety sensors for AMRs. Navigation sensor packages. Factory safety certification."},
+  {n:"Harmonic Drive",t:"6324.T",stacks:[4,5],layer:"phys-sup",role:"Precision strain wave gears for robot joints. Used in virtually all humanoid + industrial robot actuators."},
+  {n:"Maxon Motor",t:"Private",stacks:[4,5],layer:"phys-sup",role:"Precision brushless DC motors for robotic actuators. High torque density. Used in Atlas, many humanoids."},
+];
+
+// Pre-compute overlap counts
+const overlapCount = {};
+companies.forEach(c => { overlapCount[c.n] = c.stacks.length; });
+
+const stackNames = [
+  {id:1, short:"Defense: Terrestrial/Aerial", cls:"sh-1"},
+  {id:2, short:"Defense: Orbital/Space", cls:"sh-2"},
+  {id:3, short:"Commercial: Self-Driving", cls:"sh-3"},
+  {id:4, short:"Commercial: Industrial AMR", cls:"sh-4"},
+  {id:5, short:"Commercial: Consumer Robots", cls:"sh-5"},
+  {id:6, short:"Commercial: Space Datacenters", cls:"sh-6"},
+];
+
+const layerDefs = [
+  {id:"app", title:"Application Layer", cls:"l-app"},
+  {id:"ai", title:"AI/ML Platform", cls:"l-ai"},
+  {id:"dc", title:"AI Datacenter", cls:"l-dc", hasSub:true},
+  {id:"hw", title:"Compute Hardware", cls:"l-hw"},
+  {id:"phys", title:"Physical Platform", cls:"l-phys", hasOemSup:true},
+];
+
+let activeFilter = 'all';
+
+function ovClass(n) {
+  const c = overlapCount[n] || 1;
+  if (c >= 6) return 'ov-6';
+  if (c >= 5) return 'ov-5';
+  if (c >= 4) return 'ov-4';
+  if (c >= 3) return 'ov-3';
+  if (c >= 2) return 'ov-2';
+  return 'ov-1';
+}
+
+function makeChip(company) {
+  const el = document.createElement('span');
+  el.className = 'chip ' + ovClass(company.n);
+  el.textContent = company.t === 'Private' || company.t === 'OSS' ? company.n : company.n;
+  el.title = company.t;
+  el.dataset.name = company.n;
+  
+  // Apply filter
+  if (activeFilter === 'multi' && company.stacks.length < 2) el.classList.add('dim');
+  if (activeFilter === '3plus' && company.stacks.length < 3) el.classList.add('dim');
+  if (activeFilter === '5plus' && company.stacks.length < 5) el.classList.add('dim');
+  
+  el.addEventListener('click', () => showDetail(company));
+  el.addEventListener('mouseenter', () => {
+    document.querySelectorAll('.chip').forEach(ch => {
+      if (ch.dataset.name === company.n) ch.classList.add('glow');
+    });
+  });
+  el.addEventListener('mouseleave', () => {
+    document.querySelectorAll('.chip').forEach(ch => ch.classList.remove('glow'));
+  });
+  return el;
+}
+
+function render() {
+  const wrap = document.getElementById('stacks');
+  wrap.innerHTML = '';
+  
+  stackNames.forEach(stack => {
+    const col = document.createElement('div');
+    col.className = 'stack-col';
+    
+    // Header
+    const header = document.createElement('div');
+    header.className = 'stack-header ' + stack.cls;
+    header.textContent = stack.short;
+    col.appendChild(header);
+    
+    layerDefs.forEach(layer => {
+      const layerEl = document.createElement('div');
+      let dcMinor = (layer.id === 'dc' && stack.id === 5);
+      layerEl.className = 'layer ' + layer.cls + (dcMinor ? ' minor' : '');
+      
+      const title = document.createElement('div');
+      title.className = 'layer-title';
+      title.textContent = layer.title + (dcMinor ? ' (minor)' : '');
+      layerEl.appendChild(title);
+      
+      if (layer.id === 'dc' && layer.hasSub) {
+        // Main DC companies
+        const mainChips = document.createElement('div');
+        mainChips.className = 'chips';
+        companies.filter(c => c.layer === 'dc' && c.stacks.includes(stack.id))
+          .forEach(c => mainChips.appendChild(makeChip(c)));
+        layerEl.appendChild(mainChips);
+        
+        // Power sub-layer
+        const pwrSub = document.createElement('div');
+        pwrSub.className = 'sublayer';
+        const pwrTitle = document.createElement('div');
+        pwrTitle.className = 'sublayer-title';
+        pwrTitle.textContent = 'Power';
+        pwrSub.appendChild(pwrTitle);
+        const pwrChips = document.createElement('div');
+        pwrChips.className = 'chips';
+        companies.filter(c => c.layer === 'dc-power' && c.stacks.includes(stack.id))
+          .forEach(c => pwrChips.appendChild(makeChip(c)));
+        pwrSub.appendChild(pwrChips);
+        if (pwrChips.children.length > 0) layerEl.appendChild(pwrSub);
+        
+        // CPO sub-layer
+        const cpoSub = document.createElement('div');
+        cpoSub.className = 'sublayer';
+        const cpoTitle = document.createElement('div');
+        cpoTitle.className = 'sublayer-title';
+        cpoTitle.textContent = 'Co-Packaged Optics';
+        cpoSub.appendChild(cpoTitle);
+        const cpoChips = document.createElement('div');
+        cpoChips.className = 'chips';
+        companies.filter(c => c.layer === 'dc-cpo' && c.stacks.includes(stack.id))
+          .forEach(c => cpoChips.appendChild(makeChip(c)));
+        cpoSub.appendChild(cpoChips);
+        if (cpoChips.children.length > 0) layerEl.appendChild(cpoSub);
+        
+      } else if (layer.id === 'phys' && layer.hasOemSup) {
+        // OEM section
+        const oemLabel = document.createElement('div');
+        oemLabel.className = 'oem-label';
+        oemLabel.textContent = 'OEMs';
+        layerEl.appendChild(oemLabel);
+        const oemChips = document.createElement('div');
+        oemChips.className = 'chips';
+        companies.filter(c => c.layer === 'phys-oem' && c.stacks.includes(stack.id))
+          .forEach(c => oemChips.appendChild(makeChip(c)));
+        layerEl.appendChild(oemChips);
+        
+        // Supplier section
+        const supLabel = document.createElement('div');
+        supLabel.className = 'sup-label';
+        supLabel.textContent = 'Suppliers';
+        layerEl.appendChild(supLabel);
+        const supChips = document.createElement('div');
+        supChips.className = 'chips';
+        companies.filter(c => c.layer === 'phys-sup' && c.stacks.includes(stack.id))
+          .forEach(c => supChips.appendChild(makeChip(c)));
+        layerEl.appendChild(supChips);
+        
+      } else if (layer.id !== 'dc') {
+        const chips = document.createElement('div');
+        chips.className = 'chips';
+        companies.filter(c => c.layer === layer.id && c.stacks.includes(stack.id))
+          .forEach(c => chips.appendChild(makeChip(c)));
+        layerEl.appendChild(chips);
+      }
+      
+      col.appendChild(layerEl);
+    });
+    
+    wrap.appendChild(col);
+  });
+}
+
+function showDetail(c) {
+  document.getElementById('dn').textContent = c.n;
+  document.getElementById('dtk').textContent = c.t;
+  const pr = document.getElementById('dpr');
+  pr.innerHTML = '<strong style="font-size:.65rem;color:#888">Present in:</strong> ' + 
+    c.stacks.map(s => {
+      const sn = stackNames.find(x=>x.id===s);
+      return `<span class="p${s}">${sn.short}</span>`;
+    }).join('');
+  document.getElementById('drl').textContent = c.role;
+  document.getElementById('det').classList.add('show');
+  document.getElementById('ov').classList.add('show');
+}
+
+function closeD(){
+  document.getElementById('det').classList.remove('show');
+  document.getElementById('ov').classList.remove('show');
+}
+document.getElementById('xb').onclick = closeD;
+document.getElementById('ov').onclick = closeD;
+
+// Filters
+const filterDefs = [
+  {f:'all', l:'All Companies'},
+  {f:'multi', l:'2+ Stacks (Overlap)'},
+  {f:'3plus', l:'3+ Stacks'},
+  {f:'5plus', l:'5-6 Stacks (Titans)'},
+];
+const fWrap = document.getElementById('filters');
+filterDefs.forEach(({f,l}) => {
+  const btn = document.createElement('button');
+  btn.className = 'fbtn' + (f === 'all' ? ' active' : '');
+  btn.textContent = l;
+  btn.onclick = () => {
+    fWrap.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = f;
+    render();
+  };
+  fWrap.appendChild(btn);
+});
+
+render();
+</script>
+</body>
+</html>
